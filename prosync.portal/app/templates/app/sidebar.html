@@ -1,5 +1,5 @@
 <div class="left_col scroll-view">
-  <div class="navbar nav_title" style="border: 0;">
+  <div class="navbar nav_title" style="border:0;background:#ffffff">
     <a href="index.html" class="site_title"> <image src="/static/images/pro-sync-logo.png" width="55" height="45"/> Pro-Sync</a>
   </div>
 
@@ -18,7 +18,7 @@
   <!-- /menu profile quick info -->
 
   <br />
-
+{% if user.is_authenticated %}
   <!-- sidebar menu -->
   <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
     <div class="menu_section">
@@ -75,6 +75,11 @@
             <li><a href="fixed_footer.html">Fixed Footer</a></li>
           </ul>-->
         </li>
+        {% if user.is_authenticated and user.is_superuser %}
+        <li><a><i class="fa fa-windows"></i> Admin Settings <span class="fa fa-chevron-down"></span></a>
+
+        </li>
+        {% endif %}
       </ul>
     </div>
    <!-- <div class="menu_section">
@@ -118,6 +123,7 @@
         </li>
       </ul>-->
     </div>
+  {% endif %}
   </div>
   <!-- /sidebar menu -->
 

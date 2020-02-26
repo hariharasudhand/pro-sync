@@ -8,6 +8,10 @@ def index(request):
     template = loader.get_template('app/index.html')
     return HttpResponse(template.render(context, request))
 
+def success(request):
+    context = {}
+    template = loader.get_template('app/main.html')
+    return HttpResponse(template.render(context, request))
 
 def gentella_html(request):
     context = {}
