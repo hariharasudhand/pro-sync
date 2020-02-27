@@ -13,5 +13,6 @@ urlpatterns = [
 
     # organization links
     path('org-onboard/', user_view.orgOnboard, name='org-onboard'),
+    path('org-registered/', user_view.orgRegistered, name='org-registered'),
 
 ]

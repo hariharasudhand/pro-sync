@@ -13,7 +13,7 @@ class OrgRegisterForm(forms.ModelForm):
 
     class Meta:
         model = Organization
-        fields = ['org_name', 'address']
+        fields = ['org_name']
 
 class OrgUpdateForm(forms.ModelForm):
 
