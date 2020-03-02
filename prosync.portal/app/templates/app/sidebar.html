@@ -77,7 +77,12 @@
         </li>
         {% if user.is_authenticated and user.is_superuser %}
         <li><a><i class="fa fa-windows"></i> Admin Settings <span class="fa fa-chevron-down"></span></a>
-
+          <ul class="nav child_menu">
+            <li><a href="{% url 'org-update' %}">Update Organization</a></li>
+            <li><a href="{% url 'register' %}">Add User</a></li>
+            <li><a href="{% url 'roles' %}">Roles Permission</a></li>
+            <li><a href="{% url 'groups' %}">Group</a></li>
+          </ul>
         </li>
         {% endif %}
       </ul>
