@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from multiselectfield import MultiSelectField
@@ -56,7 +56,7 @@ class Profile(models.Model):
     org = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     user_token = models.CharField(max_length=80, null=True, blank=True)
-    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True)
+    group = models.ForeignKey(Groups, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=20, null=False, blank=False, default='INACTIVE')
     date_added = models.DateField(auto_now_add=True)
     date_updated = models.DateField(auto_now=True)

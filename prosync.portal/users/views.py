@@ -4,7 +4,7 @@ from django.template import loader
 from django.http import HttpResponse
 from .models import Profile, Groups, RolePermission, Organization
 from .forms import (OrgRegisterForm, UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
-        GroupsForm, RolePermissionForm, OrgUpdateForm)
+        GroupsForm, RolePermissionForm, OrgUpdateForm, OrgApprovalForm)
 
 # Organization Onboard handler,
 def orgRegistered(request):
@@ -16,6 +16,41 @@ def save_org(user_obj, org_obj):
     profile_obj = Profile.objects.get(user_id=user_obj.id)
     profile_obj.org_id = org_obj.id
     profile_obj.save()
+
+def org_approved(request):
+    org = Organization.objects.all().order_by('-date_added')
+    form = OrgApprovalForm(request.POST or None)
+    context = {
+        'form': form,
+        'model': org,
+        'org_id': 0,
+    }
+    return render(request, 'users/org_approve.html', context)
+
+def org_approve(request, id):
+    org = Organization.objects.all().order_by('-date_added')
+    form = OrgApprovalForm(request.POST or None)
+    print('id:', id, 'method: ', request.method)
+    if id>0:
+        obj = Profile.objects.get(org_id=id)
+        form = OrgApprovalForm(request.POST or None, instance=obj)
+        if request.method == 'POST':
+            if form.is_valid():
+                prof_obj = form.save()
+                prof_obj.group = form.cleaned_data.get('group')
+                prof_obj.status = 'ACTIVE'
+                prof_obj.save()
+                org_obj = Organization.objects.get(id=prof_obj.org_id)
+                org_obj.status = 'ACTIVE'
+                org_obj.save()
+                messages.success(request, f'The organization is activated')
+                return redirect('org-approved')
+    context = {
+        'form': form,
+        'model': org,
+        'org_id': id,
+    }
+    return render(request, 'users/org_approve.html', context)
 
 def orgOnboard(request):
     if request.method == 'POST':

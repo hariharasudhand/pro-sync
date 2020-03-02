@@ -17,6 +17,13 @@ class OrgRegisterForm(forms.ModelForm):
         model = Organization
         fields = ['org_name']
 
+class OrgApprovalForm(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        fields = ['group', 'org']
+        widgets = {'org': forms.HiddenInput(), }
+
 class OrgUpdateForm(forms.ModelForm):
 
     class Meta:

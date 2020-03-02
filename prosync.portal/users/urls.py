@@ -18,7 +18,8 @@ urlpatterns = [
     path('org-onboard/', user_view.orgOnboard, name='org-onboard'),
     path('org-registered/', user_view.orgRegistered, name='org-registered'),
     path('org-update/', user_view.org_update, name='org-update'),
-
+    path('org-approve/<int:id>', user_view.org_approve, name='org-approve'),
+    path('org-approved/', user_view.org_approved, name='org-approved'),
 
     # Roles links
     path('roles/', user_view.roles_add, name='roles'),
