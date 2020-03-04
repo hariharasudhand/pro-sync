@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'users',
-    'crispy_forms'
+    'crispy_forms',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
