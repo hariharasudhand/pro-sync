@@ -139,30 +139,10 @@
 
                     </fieldset>
 
-<!--                    <div class="form-group">-->
-<!--                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pro_name">Product Name <span class="required">*</span></label>-->
-<!--                      <div class="col-md-6 col-sm-6 col-xs-12">-->
-<!--                        <input type="text" id="pro_name" name="pro_name" required="required" class="form-control col-md-7 col-xs-12">-->
-<!--                      </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="form-group">-->
-<!--                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="pro_price">Price <span class="required">*</span></label>-->
-<!--                      <div class="col-md-6 col-sm-6 col-xs-12">-->
-<!--                        <input id="pro_price" class="form-control col-md-7 col-xs-12" required="required" type="number" min="0" name="pro_price">-->
-<!--                      </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="form-group">-->
-<!--                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="exp_duration">Expiry Duration <span class="required">*</span></label>-->
-<!--                      <div class="col-md-6 col-sm-6 col-xs-12">-->
-<!--                        <input id="exp_duration" class="form-control col-md-7 col-xs-12" type="number" required="required" min="0" name="exp_duration">-->
-<!--                      </div>-->
-<!--                    </div>-->
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div id="gender" class="btn-group" data-toggle="buttons">
+                        <div id="status" class="btn-group" data-toggle="buttons">
                           <label class="btn btn-primary" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
                             <input type="radio" name="status" value="ACTIVE" required> &nbsp; Active &nbsp;
                           </label>
@@ -174,7 +154,7 @@
                     </div>
 
                     <div class="form-group">
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5"> 
+                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
                         {% if is_update %}
                         <button type="submit" class="btn btn-success">&nbsp; Update &nbsp;</button>
                         {% else %}
