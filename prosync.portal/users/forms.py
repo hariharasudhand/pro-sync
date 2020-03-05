@@ -11,14 +11,25 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+
+class ChangePassForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2']
+        widgets = {'username': forms.HiddenInput(), }
+
+
+
 class OrgRegisterForm(forms.ModelForm):
 
     class Meta:
         model = Organization
         fields = ['org_name']
 
-class OrgApprovalForm(forms.ModelForm):
 
+class OrgApprovalForm(forms.ModelForm):
+    # org = forms.ModelChoiceField(queryset=Organization.objects.all(),
+    #                                required=True)
     class Meta:
         model = Profile
         fields = ['group', 'org']

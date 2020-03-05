@@ -7,16 +7,17 @@ urlpatterns = [
 
     path('register/', user_view.register, name='register'),
     path('profile/', user_view.profile, name='profile'),
-    path('activate/', user_view.activate, name='activate'),
+    # path('activate/', user_view.activate, name='activate'),
 
 
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
-    path('success/', auth_views.LoginView.as_view(template_name='app/main.html'), name='success'),
+    path('success/', user_view.login_request, name='success'),
     path('logout/', auth_views.LogoutView.as_view(template_name='app/index.html'), name='logout'),
+    path('change-pass/', user_view.change_pass, name='change-pass'),
 
     # organization links
-    path('org-onboard/', user_view.orgOnboard, name='org-onboard'),
-    path('org-registered/', user_view.orgRegistered, name='org-registered'),
+    path('org-onboard/', user_view.org_onboard, name='org-onboard'),
+    path('org-registered/', user_view.org_registered, name='org-registered'),
     path('org-update/', user_view.org_update, name='org-update'),
     path('org-approve/<int:id>', user_view.org_approve, name='org-approve'),
     path('org-approved/', user_view.org_approved, name='org-approved'),

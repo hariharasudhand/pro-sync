@@ -80,11 +80,12 @@
           <ul class="nav child_menu">
             {% if user.is_superuser %}
               <li><a href="{% url 'org-approve' 0 %}">Approve Organization</a></li>
-            {% endif %}
+            {% else %}
             <li><a href="{% url 'org-update' %}">Update Organization</a></li>
             <li><a href="{% url 'register' %}">Add User</a></li>
             <li><a href="{% url 'roles' %}">Roles Permission</a></li>
             <li><a href="{% url 'groups' %}">Group</a></li>
+            {% endif %}
           </ul>
         </li>
         {% endif %}

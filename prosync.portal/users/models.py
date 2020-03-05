@@ -22,6 +22,7 @@ class Organization(models.Model):
     def __str__(self):
         return self.org_name
 
+
 class RolePermission(models.Model):
     role_name = models.CharField(max_length=50, default='')
     module = MultiSelectField(choices=MODULES, default='Support')
@@ -37,6 +38,7 @@ class RolePermission(models.Model):
     def __str__(self):
         return self.role_name
 
+
 class Groups(models.Model):
     group_name = models.CharField(max_length=25, default='')
     org = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
@@ -50,7 +52,7 @@ class Groups(models.Model):
 
 
 class Profile(models.Model):
-    email = models.CharField(max_length=50, null=False, blank=False, default='')
+    # email = models.CharField(max_length=50, null=False, blank=False, default='')
     phone = models.CharField(max_length=10, null=True, blank=True)
     photo = models.ImageField(default='male_default.png', upload_to='profile_pics')
     org = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
@@ -60,14 +62,17 @@ class Profile(models.Model):
     status = models.CharField(max_length=20, null=False, blank=False, default='INACTIVE')
     date_added = models.DateField(auto_now_add=True)
     date_updated = models.DateField(auto_now=True)
+    force_login = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
