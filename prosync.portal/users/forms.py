@@ -6,7 +6,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 
 class UserRegisterForm(UserCreationForm):
-
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
@@ -19,9 +18,7 @@ class ChangePassForm(UserCreationForm):
         widgets = {'username': forms.HiddenInput(), }
 
 
-
 class OrgRegisterForm(forms.ModelForm):
-
     class Meta:
         model = Organization
         fields = ['org_name']
@@ -36,21 +33,30 @@ class OrgApprovalForm(forms.ModelForm):
         widgets = {'org': forms.HiddenInput(), }
 
 class OrgUpdateForm(forms.ModelForm):
-
     class Meta:
         model = Organization
         fields = ['address', 'org_type']
         widgets = {'address': forms.Textarea(attrs={"rows":5, "cols":20}), }
 
-class UserUpdateForm(forms.ModelForm):
 
+class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name']
 
 
-class ProfileUpdateForm(forms.ModelForm):
+class ProfileAddForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['group']
+    def __init__(self, orgId, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        if self.instance:
+            self.fields['group'].queryset = Groups.objects.filter(org=orgId)
+
+
+class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['phone', 'photo']
@@ -86,7 +92,7 @@ class RolePermissionForm(forms.ModelForm):
                 Column('delete', css_class='form-group col-md-3 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Save')
+            Submit('submit', 'Save', css_class='col-md-2 col-sm-2 col-xs-2 col-md-offset-5')
         )
 
 
@@ -97,12 +103,11 @@ class GroupsForm(forms.ModelForm):
         fields = ['group_name', 'role_permission', 'org']
         widgets = {'org': forms.HiddenInput(), }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, orgId, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if self.instance:
-            self.fields['role_permission'].queryset = RolePermission.objects.filter(status__iexact='ACTIVE')
-
+            self.fields['role_permission'].queryset = RolePermission.objects.filter(org=orgId)
 
         self.helper = FormHelper()
         self.helper.layout = Layout(

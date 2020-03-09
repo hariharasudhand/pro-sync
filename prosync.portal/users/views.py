@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.db.models import Subquery
 from django.template import loader
 from django.http import HttpResponse
-from .models import Profile, Groups, RolePermission, Organization
+from .models import Profile, Groups, RolePermission, Organization, MODULES
 from .forms import (OrgRegisterForm, UserRegisterForm, UserUpdateForm, ProfileUpdateForm,
                     GroupsForm, RolePermissionForm, OrgUpdateForm, OrgApprovalForm,
-                    ChangePassForm)
+                    ChangePassForm, ProfileAddForm)
 
 
 def login_request(request):
@@ -19,15 +21,18 @@ def login_request(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                if user.profile.force_login:
-                    return redirect('change-pass')
-
                 if user.profile.status == 'INACTIVE':
                     return redirect('org-registered')
 
                 login(request, user)
+                context = {
+                    'role': user.profile.group.role_permission,
+                    'module': MODULES,
+                }
+                if user.profile.force_login:
+                    return redirect('password_change')
                 # messages.info(request, "You are now logged in as {username}")
-                return redirect('app/main.html')
+                return redirect('app/main.html', context)
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -36,24 +41,6 @@ def login_request(request):
     return render(request=request,
                   template_name="users/login.html",
                   context={"form": form})
-
-
-def change_pass(request):
-    user = request.user
-    form = ChangePassForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            obj = form.save()
-            obj.force_login = False
-            obj.save()
-            return redirect('success')
-
-    context = {
-        'form': form,
-        'model': user,
-    }
-
-    return render(request, 'users/change_pass.html', context)
 
 
 # Organization Onboard handler,
@@ -152,18 +139,26 @@ def org_update(request):
 
 def register(request):
     org_id = request.user.profile.org.id
+    model = User.objects.filter(profile__org=org_id)
     org_obj = Organization.objects.get(id=org_id)
     form = UserRegisterForm(request.POST or None)
-
+    p_form = ProfileAddForm(org_id, request.POST or None)
     if request.method == 'POST':
-        if form.is_valid():
+        if form.is_valid() and p_form.is_valid():
             user_obj = form.save()
-            messages.success(request, 'New user {user_obj.username} is created')
-            save_org(user_obj, org_obj)
+            messages.success(request, f'New user {user_obj.username} is created')
+            profile_obj = Profile.objects.get(user_id=user_obj.id)
+            profile_obj.org_id = org_obj.id
+            profile_obj.group = p_form.cleaned_data.get('group')
+            profile_obj.status = 'ACTIVE'
+            profile_obj.force_login = True
+            profile_obj.save()
             redirect('register')
 
     context = {
         'form': form,
+        'model': model,
+        'p_form': p_form,
         'org_id': org_id,
     }
     return render(request, 'users/users_add.html', context)
@@ -183,7 +178,8 @@ def roles_update(request, id):
 
 
 def roles_helper(request, id):
-    model = RolePermission.objects.filter(status='ACTIVE')
+    orgId = request.user.profile.org.id
+    model = RolePermission.objects.filter(status='ACTIVE').filter(org_id=orgId)
     if id > 0:
         obj = RolePermission.objects.get(id=id)
         form = RolePermissionForm(request.POST or None, instance=obj)
@@ -228,13 +224,15 @@ def groups_cancel(request, id):
 
 
 def groups_helper(request, id):
-    model = Groups.objects.filter(status='ACTIVE')
+    orgId = request.user.profile.org.id
+    role = RolePermission.objects.filter(org_id=orgId)
+    model = Groups.objects.filter(status='ACTIVE').filter(org=orgId)
     if id > 0:
         obj = Groups.objects.get(id=id)
-        form = GroupsForm(request.POST or None, instance=obj)
+        form = GroupsForm(orgId, request.POST or None, instance=obj)
         is_update = True
     else:
-        form = GroupsForm(request.POST or None)
+        form = GroupsForm(orgId, request.POST or None)
         is_update = False
         obj = None
 
@@ -251,7 +249,7 @@ def helper(request, model, form, str_redirect, str_render, str_msg, is_update, o
     # module.co
     if form.is_valid():
         form.save()
-        messages.success(request, '{str_msg} data is updated')
+        messages.success(request, f'{str_msg} data is updated')
         return redirect(str_redirect)
     context = {
         'form': form,

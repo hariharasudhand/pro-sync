@@ -14,9 +14,6 @@
         {% endfor %}
       {% endif %}
       <div class="row">
-        <div class="col-md-3 col-sm-3 col-xs-3">
-          &nbsp;
-        </div>
         <div class="col-md-6 col-sm-6 col-xs-6">
           <div class="x_panel">
             <div class="x_title">
@@ -34,6 +31,7 @@
                   <input type="hidden" name="org" value="{{org_id}}">
                   <fieldset class="form-group">
                       {{ form|crispy }}
+                      {{ p_form|crispy }}
                   </fieldset>
                   <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
@@ -49,6 +47,44 @@
             </div>
           </div>
         </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="x_panel">
+                <div>
+                    <h2>User List</h2>
+                </div>
+              <table id="datatable" class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Group</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% if model %}
+                    {% for mod in model %}
+                        <input type="hidden" name="id" value="{{ mod.id }}"
+                      <tr>
+                        <td>{{mod.username}}</td>
+                        <td>{{mod.email}}</td>
+                        <td>{{mod.profile.group}}</td>
+                        <td>
+                            <a href="{% url 'roles-update' mod.id %}">
+                            <i class="fa fa-edit"></i></a></td>
+                        <td>
+                            <a onclick="return confirm('Are you sure you want to delete this?')" href="{% url 'roles-delete' mod.id %}">
+                            <i class="fa fa-close"></i></a></td>
+                      </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
       </div>
     </div>
   </div>
