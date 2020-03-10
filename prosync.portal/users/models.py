@@ -67,6 +67,19 @@ class Profile(models.Model):
     def __str__(self):
         return self.user
 
+# Consumer Entity
+class Consumer(models.Model):
+    con_name = models.CharField(max_length=50, null=False, blank=False)
+    username = models.CharField(max_length=50, null=False, blank=False, unique=True)
+    email = models.CharField(max_length=50, null=False, blank=False, unique=True)
+    phone = models.CharField(max_length=10, null=True, blank=True)
+    status = models.CharField(max_length=20, null=False, blank=False, default='ACTIVE')
+    date_added = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.con_name
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
