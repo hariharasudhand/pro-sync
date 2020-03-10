@@ -7,7 +7,8 @@ urlpatterns = [
 
     path('register/', user_view.register, name='register'),
     path('profile/', user_view.profile, name='profile'),
-    # path('activate/', user_view.activate, name='activate'),
+    path('profile/<int:id>/update', user_view.profile_update, name='profile-update'),
+    path('profile/<int:id>/delete', user_view.profile_delete, name='profile-delete'),
 
 
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),

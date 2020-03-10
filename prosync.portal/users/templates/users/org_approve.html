@@ -34,7 +34,7 @@
               <br />
                <form method="post">
                   {% csrf_token %}
-                  <input type="hidden" name="org" value="{{org_id}}">
+
                   <fieldset class="form-group">
                       {{ form|crispy }}
                   </fieldset>
