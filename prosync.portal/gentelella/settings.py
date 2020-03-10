@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'users',
     'crispy_forms',
     'multiselectfield',
-    'django_filters'
+    'django_filters',
+    'product',
 ]
 
 MIDDLEWARE = [
