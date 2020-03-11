@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Application definition
 
@@ -39,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'users',
-    'crispy_forms'
+    'crispy_forms',
+    'multiselectfield',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
