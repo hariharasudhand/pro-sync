@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import asgi_redis
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'product',
     'rest_framework',
     'rest_framework.authtoken',
+    'channels',
 ]
 
 REST_FRAMEWORK = {
@@ -54,6 +56,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'users.api.authentication.MyOwnTokenAuthentication',
     ],
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+        # "ROUTING": "app.routing.channel_routing",
+    },
 }
 
 MIDDLEWARE = [
