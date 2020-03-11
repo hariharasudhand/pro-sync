@@ -13,13 +13,6 @@ from .forms import (OrgRegisterForm, UserRegisterForm, UserUpdateForm, ProfileUp
 from app.utils import AccessPermission
 
 
-def get_roles(request):
-    if not request.user.is_superuser:
-        roles = AccessPermission(request.user.profile.group.role_permission)
-    else:
-        roles = 'superuser'
-    return roles
-
 def login_request(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
@@ -37,7 +30,10 @@ def login_request(request):
                     save_org(user, user.profile.org)
                     return redirect('password_change')
 
-                roles = get_roles(request)
+                if not user.is_superuser:
+                    roles = AccessPermission(user.profile.group.role_permission)
+                else:
+                    roles = 'superuser'
                 context = {
                     'roles': roles,
                 }
@@ -66,18 +62,48 @@ def save_org(user_obj, org_obj):
     profile_obj.force_login = False
     profile_obj.save()
 
+def create_admin_group(org_id):
+    role = RolePermission.objects.get(org = org_id)
+    group = Groups.objects.get(org = org_id)
+    role.id = 1
+    role.org = org_id
+    role.role_name = "Administrator"
+    role.module = ('Admin','Product','Billing','Batch','Support','Offer')
+    role.create = True
+    role.view = True
+    role.update = True
+    role.delete = True
+
+    group.id = 1
+    group.org = org_id
+
 
 def org_approved(request):
     org = Organization.objects.all().order_by('-date_added')
     form = OrgApprovalForm(request.POST or None)
-    str_render = 'users/org_approve.html'
-    return org_helper(request, form, org, id, str_render)
+    if not request.user.is_superuser:
+        roles = AccessPermission(request.user.profile.group.role_permission)
+    else:
+        roles = 'SuperUser'
+    context = {
+        'form': form,
+        'model': org,
+        'org_id': 0,
+        'roles': roles,
+    }
+    return render(request, 'users/org_approve.html', context)
+
 
 def org_approve(request, id):
+    print('1......', id)
     if id > 0:
+        print('4......')
         obj = Profile.objects.get(org_id=id)
+        print('5......')
         org_id = obj.org.id
+        print('6......', org_id)
         form = OrgApprovalForm(org_id, request.POST or None, instance=obj)
+        print('7......')
         if request.method == 'POST':
             if form.is_valid():
                 prof_obj = form.save()
@@ -91,11 +117,22 @@ def org_approve(request, id):
                 messages.success(request, 'The organization is activated')
                 return redirect('org-approved')
     else:
+        print('2......')
         form = OrgApprovalForm(request.POST or None)
+    if not request.user.is_superuser:
+        roles = AccessPermission(request.user.profile.group.role_permission)
+    else:
+        roles = 'Superuser'
 
     org = Organization.objects.filter(status='INACTIVE').order_by('-date_added')
-    str_render = 'users/org_approve.html'
-    return org_helper(request, form, org, id, str_render)
+    context = {
+        'form': form,
+        'model': org,
+        'org_id': id,
+        'roles': roles,
+    }
+    return render(request, 'users/org_approve.html', context)
+
 
 def org_onboard(request):
     if request.method == 'POST':
@@ -129,19 +166,15 @@ def org_update(request):
             form.save()
             messages.success(request, 'The Organization details are updated')
             redirect('org-update')
-    str_render = 'users/org_update.html'
-    return org_helper(request, form, org_obj, org_id, str_render)
-
-
-def org_helper(request, form, org, org_id, str_render):
-    roles = get_roles(request)
+    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'form': form,
-        'model': org,
         'org_id': org_id,
+        'org_obj': org_obj,
         'roles': roles,
     }
-    return render(request, str_render, context)
+    return render(request, 'users/org_update.html', context)
+
 
 def register(request):
     org_id = request.user.profile.org.id
@@ -180,7 +213,7 @@ def profile_update(request, id):
 
 def profile_helper(request, u_form, p_form, org_id, is_update):
     model = User.objects.filter(profile__org=org_id)
-    roles = get_roles(request)
+    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'form': u_form,
         'model': model,
@@ -204,8 +237,7 @@ def profile(request):
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
-
-    roles = get_roles(request)
+    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'u_form': u_form,
         'p_form': p_form,
@@ -293,7 +325,7 @@ def helper(request, model, form, str_redirect, str_render, str_msg, is_update, o
         form.save()
         messages.success(request, f'{str_msg} data is updated')
 
-    roles = get_roles(request)
+    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'form': form,
         'model': model,
@@ -309,7 +341,7 @@ def cancel_helper(request, id, model, form, obj, str_render):
     if id:
         obj.status = 'INACTIVE'
         obj.save()
-    roles = get_roles(request)
+    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'model': model,
         'form': form,
