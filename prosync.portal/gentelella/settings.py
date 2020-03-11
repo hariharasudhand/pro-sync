@@ -43,8 +43,18 @@ INSTALLED_APPS = [
     'users',
     'crispy_forms',
     'multiselectfield',
-    'django_filters'
+    'django_filters',
+    'product',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'users.api.authentication.MyOwnTokenAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

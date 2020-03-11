@@ -5,11 +5,6 @@ from .models import Organization, Profile, RolePermission, Groups, MODULES
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 
-class UserRegisterForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2']
-
 
 class ChangePassForm(UserCreationForm):
     class Meta:
@@ -25,12 +20,16 @@ class OrgRegisterForm(forms.ModelForm):
 
 
 class OrgApprovalForm(forms.ModelForm):
-    # org = forms.ModelChoiceField(queryset=Organization.objects.all(),
-    #                                required=True)
     class Meta:
         model = Profile
         fields = ['group', 'org']
         widgets = {'org': forms.HiddenInput(), }
+
+    def __init__(self, orgId, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance:
+            self.fields['group'].queryset = Groups.objects.filter(org=orgId)
 
 class OrgUpdateForm(forms.ModelForm):
     class Meta:
@@ -39,10 +38,15 @@ class OrgUpdateForm(forms.ModelForm):
         widgets = {'address': forms.Textarea(attrs={"rows":5, "cols":20}), }
 
 
+class UserRegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'email']
 
 
 class ProfileAddForm(forms.ModelForm):

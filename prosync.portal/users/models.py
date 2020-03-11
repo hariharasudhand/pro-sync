@@ -24,8 +24,8 @@ class Organization(models.Model):
 
 
 class RolePermission(models.Model):
-    role_name = models.CharField(max_length=50, default='')
-    module = MultiSelectField(choices=MODULES, default='Support')
+    role_name = models.CharField(max_length=50, default='Administrator')
+    module = MultiSelectField(choices=MODULES, default='Admin')
     org = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     create = models.BooleanField(default=False)
     view = models.BooleanField(default=False)
@@ -40,7 +40,7 @@ class RolePermission(models.Model):
 
 
 class Groups(models.Model):
-    group_name = models.CharField(max_length=25, default='')
+    group_name = models.CharField(max_length=25, default='Admin Group')
     org = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
     role_permission = models.ForeignKey(RolePermission, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=25, default='ACTIVE')
@@ -67,6 +67,19 @@ class Profile(models.Model):
     def __str__(self):
         return self.user
 
+# Consumer Entity
+class Consumer(models.Model):
+    con_name = models.CharField(max_length=50, null=False, blank=False)
+    username = models.CharField(max_length=50, null=False, blank=False, unique=True)
+    email = models.CharField(max_length=50, null=False, blank=False, unique=True)
+    phone = models.CharField(max_length=10, null=True, blank=True)
+    status = models.CharField(max_length=20, null=False, blank=False, default='ACTIVE')
+    date_added = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.con_name
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -77,3 +90,11 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+@receiver(post_save, sender=Organization)
+def create_roles(sender, instance, created, **kwargs):
+    if created:
+        role = RolePermission.objects.create(org=instance)
+        grp = Groups.objects.create(org=instance)
+        grp.role_permission = role
+        grp.save()
