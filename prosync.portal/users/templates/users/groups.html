@@ -1,6 +1,6 @@
 {% extends "app/base_site.html" %}
 {% load crispy_forms_tags %}
-{% block title %} Groups operations{% endblock title %}
+{% block title %}ProSync -  User Groups{% endblock title %}
 
 {% block stylesheets %}
   {{ block.super }}
@@ -23,9 +23,9 @@
           <div class="x_panel">
             <div class="x_title">
                 {% if is_update %}
-                    <h2>Update Group</h2>
+                    <h2>Update Groups</h2>
                 {% else %}
-                    <h2>Add Group</h2>
+                    <h2>Add Groups</h2>
                 {% endif %}
 
                 <ul class="nav navbar-right panel_toolbox">
@@ -41,6 +41,7 @@
                    <input type="hidden" name="org" value="{{org_id}}">
                   {% crispy form %}
                   <div class="clearfix"></div>
+
                </form>
             </div>
           </div>

@@ -57,7 +57,8 @@ class ProfileAddForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance:
-            self.fields['group'].queryset = Groups.objects.filter(org=orgId)
+            self.fields['group'].queryset = Groups.objects.filter(org=orgId)\
+                                            .filter(status='ACTIVE')
 
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -96,7 +97,7 @@ class RolePermissionForm(forms.ModelForm):
                 Column('delete', css_class='form-group col-md-3 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Save', css_class='col-md-2 col-sm-2 col-xs-2 col-md-offset-5')
+            Submit('submit', 'Save', css_class='btn btn-success  col-md-offset-5')
         )
 
 
@@ -111,7 +112,8 @@ class GroupsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance:
-            self.fields['role_permission'].queryset = RolePermission.objects.filter(org=orgId)
+            self.fields['role_permission'].queryset = RolePermission.objects.filter(org=orgId)\
+                                                        .filter(status='ACTIVE')
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
@@ -120,5 +122,6 @@ class GroupsForm(forms.ModelForm):
                 Column('role_permission', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Save')
+            Submit('submit', 'Save', css_class='btn btn-success  col-md-offset-5')
+
         )

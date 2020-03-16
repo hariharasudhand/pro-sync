@@ -10,5 +10,6 @@ urlpatterns = [
     # The home page
     path('', views.index, name='index'),
     path('', views.success, name='success'),
+    path('home/', views.success, name='home'),
 ]
 

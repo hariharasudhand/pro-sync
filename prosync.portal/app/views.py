@@ -1,6 +1,7 @@
 from django.contrib.auth import logout
 from django.template import loader
 from django.http import HttpResponse
+from users.views import get_roles
 
 def index(request):
     context = {}
@@ -10,7 +11,7 @@ def index(request):
 
 
 def success(request):
-    context = {}
+    context = {'roles': get_roles(request)}
     template = loader.get_template('app/main.html')
     return HttpResponse(template.render(context, request))
 
