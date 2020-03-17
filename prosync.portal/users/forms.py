@@ -29,7 +29,8 @@ class OrgApprovalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance:
-            self.fields['group'].queryset = Groups.objects.filter(org=orgId)
+            self.fields['group'].queryset = Groups.objects.filter(org=orgId).filter(status='ACTIVE')
+
 
 class OrgUpdateForm(forms.ModelForm):
     class Meta:
@@ -57,8 +58,7 @@ class ProfileAddForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance:
-            self.fields['group'].queryset = Groups.objects.filter(org=orgId)\
-                                            .filter(status='ACTIVE')
+            self.fields['group'].queryset = Groups.objects.filter(org=orgId).filter(status='ACTIVE')
 
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -78,18 +78,10 @@ class RolePermissionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # if self.instance:  # Editing and existing instance
-        #     self.fields['status'].queryset = RolePermission.objects.filter(status__iexact='ACTIVE')
-
         self.helper = FormHelper()
         self.helper.layout = Layout(
             'role_name',
             'module',
-            # Row(
-            #     Column('role_name', css_class='form-group col-md-6 mb-0'),
-            #     Column('module', css_class='form-group col-md-6 mb-0'),
-            #     css_class='form-row'
-            # ),
             Row(
                 Column('create', css_class='form-group col-md-3 mb-0'),
                 Column('view', css_class='form-group col-md-3 mb-0'),
@@ -112,8 +104,7 @@ class GroupsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance:
-            self.fields['role_permission'].queryset = RolePermission.objects.filter(org=orgId)\
-                                                        .filter(status='ACTIVE')
+            self.fields['role_permission'].queryset = RolePermission.objects.filter(org=orgId).filter(status='ACTIVE')
 
         self.helper = FormHelper()
         self.helper.layout = Layout(
