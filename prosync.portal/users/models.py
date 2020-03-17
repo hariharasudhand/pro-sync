@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from multiselectfield import MultiSelectField
+from PIL import Image
 
 MODULES = ( ('Admin', 'Admin'), ('Product', 'Product'), ('Billing', 'Billing'),
             ('Batch', 'Batch'), ('Support', 'Support'), ('Offer', 'Offer') )
@@ -66,6 +67,14 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.photo.path)
+        if img.height >125 or img.width >125:
+            output_size = (125, 125)
+            img.thumbnail(output_size)
+            img.save(self.photo.path)
 
 # Consumer Entity
 class Consumer(models.Model):

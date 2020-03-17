@@ -1,4 +1,5 @@
 from users import models
+from .models import Notification
 
 
 class AccessPermission():
@@ -32,3 +33,13 @@ class AccessPermission():
 
     def is_delete(self):
         return self.role.delete
+
+
+def insert_alerts(request, module):
+    if module == 'Admin':
+        alert = super_user
+
+    noti_obj = Notification.objects.all()
+    noti_obj.alert_details = ''
+    noti_obj.org = request.user.profile.org.id
+    noti_obj.alert_to = alert

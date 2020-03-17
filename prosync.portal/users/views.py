@@ -183,7 +183,7 @@ def profile_update(request, id):
         u_obj = User.objects.get(id=id)
         p_obj = Profile.objects.get(user_id=id)
         u_form = UserRegisterForm(request.POST or None, instance=u_obj)
-        p_form = ProfileAddForm(org_id, request.POST or None, instance=p_obj)
+        p_form = ProfileAddForm(org_id, request.POST or None, request.FILES, instance=p_obj)
 
         if request.method == 'POST' and u_form.is_valid() and p_form.is_valid():
             u_form.save()
