@@ -94,7 +94,7 @@ def org_approve(request, id):
     else:
         form = OrgApprovalForm(request.POST or None)
 
-    org = Organization.objects.filter(status='INACTIVE').order_by('-date_added')
+    org = Organization.objects.all().order_by('-date_added')
     str_render = 'users/org_approve.html'
     return org_helper(request, form, org, id, str_render)
 
