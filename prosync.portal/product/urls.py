@@ -12,4 +12,7 @@ urlpatterns = [
     # batch links
     path('batch/', views.batch, name='batch'),
     path('view_batch/<int:id>/', views.view_batch, name='view_batch'),
+
+    # item links
+    path('item/<int:id>/', views.item, name='item'),
 ]

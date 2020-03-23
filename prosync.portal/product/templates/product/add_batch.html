@@ -106,7 +106,7 @@
 
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-1">
                                         <div class="form-group">
-                                            <label for="prod_id" class="requiredField">Product <span
+                                            <label for="prod_id" class="requiredField">Product Name <span
                                                     class="asteriskField">*</span></label>
                                             {% if not is_view %}
                                             <select name="prod_id" class="select form-control" required id="prod_id">
@@ -139,13 +139,13 @@
                                                         <div class="controls">
                                                             <div class="col-md-12 xdisplay_inputx form-group has-feedback">
                                                                 {% if not is_view %}
-                                                                    <input type="text" name="release_date"
-                                                                           class="form-control has-feedback-left"
-                                                                           id="single_cal3" placeholder="Release Date"
-                                                                           aria-describedby="inputSuccess2Status3">
+                                                                <input type="text" name="release_date"
+                                                                       class="form-control has-feedback-left"
+                                                                       id="single_cal3" placeholder="Release Date"
+                                                                       aria-describedby="inputSuccess2Status3">
                                                                 {% else %}
-                                                                    <input value="{{ form.release_date.value }}" readonly
-                                                                           class="form-control has-feedback-left">
+                                                                <input value="{{ form.release_date.value }}" readonly
+                                                                       class="form-control has-feedback-left">
                                                                 {% endif %}
                                                                 <span class="glyphicon glyphicon-calendar form-control-feedback left"
                                                                       aria-hidden="true"></span>
@@ -182,6 +182,8 @@
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-4">
                                         {% if not is_view %}
                                         <button type="submit" class="btn btn-success">&nbsp; Add &nbsp;</button>
+                                        {% else %}
+                                        <a class="btn btn-success" href="{% url 'item' item_id %}">&nbsp; View &nbsp;</a>
                                         {% endif %}
                                     </div>
                                 </div>

@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import jsonfield
 from django.db import models
 from users.models import Organization
-# from django.contrib.postgres.fields import JSONField
 
 
 class Batch(models.Model):
@@ -36,3 +35,17 @@ class Product(models.Model):
 
     def __str__(self):
         return self.pro_name
+
+
+class Item(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    batch = models.ForeignKey(Batch, on_delete=models.SET_NULL, null=True)
+    org = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
+    uuid = models.CharField(max_length=100, null=True, blank=True)
+    item_id = models.BigIntegerField(null=True)
+    status = models.CharField(max_length=10, null=False, blank=False, default='INACTIVE')
+    date_added = models.DateField(auto_now_add=True)
+    date_updated = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.uuid
