@@ -78,6 +78,7 @@
             </div>
 
       <!---- Add Product --->
+  {% if roles.is_create %}
       <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="x_panel">
@@ -98,6 +99,7 @@
               <div class="clearfix"></div>
             </div>
             <div class="x_content">
+
               <div id="s2">
                   <form class="form-horizontal form-label-left" method="post">
                     {% csrf_token %}
@@ -125,7 +127,7 @@
                             <input type="radio" name="status" value="ACTIVE" required checked> &nbsp; Active &nbsp;
                           </label>
                           <label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
-                            <input type="radio" name="status" value="INACTIVE"> InActive
+                            <input type="radio" name="status" value="INACTIVE"> In Active
                           </label>
                         </div>
                       </div>
@@ -143,11 +145,12 @@
                     <div class="clearfix"></div>
                   </form>
                 </div>
+
             </div>
           </div>
         </div>
             </div>
-
+{% endif %}
           </div>
         </div>
       </div>
