@@ -15,4 +15,5 @@ urlpatterns = [
 
     # item links
     path('item/<int:id>/', views.item, name='item'),
+    path('view_qr_code/<int:id>/', views.view_qr_code, name='view_qr_code'),
 ]

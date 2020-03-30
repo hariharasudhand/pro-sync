@@ -1,7 +1,7 @@
 {% extends "app/base_site.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %} ProSync - Add Batch {% endblock title %}
+{% block title %}ProSync - Add Batch {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -13,6 +13,11 @@
 {% endblock stylesheets %}
 
 {% block content %}
+
+    {% if goto_div %}
+        <script> window.location.hash = '#s2'; </script>
+    {% endif %}
+
 <div class="right_col" role="main">
     <div class="">
         <div class="page-title">
@@ -93,7 +98,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div id="step-2">
+                        <div id="s2">
                             <form class="form-horizontal form-label-left" method="post">
                                 {% csrf_token %}
 

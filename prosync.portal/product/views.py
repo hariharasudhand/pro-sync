@@ -3,7 +3,6 @@ from datetime import timedelta, date
 from app.utils import AccessPermission
 import json
 import os
-# from requests.auth import HTTPBasicAuth
 import requests
 from django.core import serializers
 
@@ -67,7 +66,7 @@ def helper(request, model, form, str_redirect, str_render, is_update, is_view, o
     goto_div = False
     if is_update or is_view:
         goto_div = True
-    roles = AccessPermission(request.user.profile.group.role_permission)
+
     context = {
         'form': form,
         'model': model,
@@ -76,7 +75,7 @@ def helper(request, model, form, str_redirect, str_render, is_update, is_view, o
         'obj': obj,
         'org_id': org_id,
         'goto_div': goto_div,
-        'roles': roles,
+        'roles': AccessPermission(request.user.profile.group.role_permission),
     }
     return render(request, str_render, context)
 
@@ -87,12 +86,11 @@ def cancel_helper(request, id, model, form, obj, str_redirect, str_render, org_i
         obj.save()
         return redirect(str_redirect)
 
-    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'model': model,
         'form': form,
         'org_id': org_id,
-        'roles': roles,
+        'roles': AccessPermission(request.user.profile.group.role_permission),
     }
     return render(request, str_render, context)
 
@@ -190,7 +188,6 @@ def batch_helper(request, id, model, p_model, form, str_redirect, str_render, or
                     bat.save()
 
         return redirect(str_redirect)
-    roles = AccessPermission(request.user.profile.group.role_permission)
     context = {
         'model': model,
         'form': form,
@@ -198,7 +195,7 @@ def batch_helper(request, id, model, p_model, form, str_redirect, str_render, or
         'p_model': p_model,
         'org_id': org_id,
         'prod': Product.objects.filter(status='ACTIVE', org_id=org_id),
-        'roles': roles,
+        'roles': AccessPermission(request.user.profile.group.role_permission),
         'is_view': is_view,
     }
     if is_view:
@@ -213,12 +210,28 @@ def item(request, id):
 
 
 def item_helper(request, model, id):
-    roles = AccessPermission(request.user.profile.group.role_permission)
     bat = Batch.objects.get(id=id)
     context = {
         'model': model,
         'bat': bat,
         'prod': Product.objects.get(id=bat.prod_id),
-        'roles': roles,
+        'roles': AccessPermission(request.user.profile.group.role_permission),
     }
     return render(request, "product/add_item.html", context)
+
+
+def view_qr_code(request, id):
+    org_id = request.user.profile.org.id
+    model = Item.objects.filter(org_id=org_id, batch_id=id)
+    bat = Batch.objects.get(id=id)
+    prod = Product.objects.get(id=bat.prod_id)
+    li = [{'item_id': mod.id, 'prod_name': prod.pro_name, 'uuid': mod.uuid, 'price': prod.pro_price,
+           'expiry_duration': prod.exp_duration, 'created_date': str(mod.date_added)} for mod in model]
+
+    context = {
+        'bat': bat,
+        'prod': prod,
+        'roles': AccessPermission(request.user.profile.group.role_permission),
+        'list': li,
+    }
+    return render(request, "product/view_qr_code.html", context)
