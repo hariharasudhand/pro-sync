@@ -1,10 +1,13 @@
 from django import forms
 from django.conf import settings
 
-from .models import Product, Batch
+from .models import Product, Batch, Item
 
 
 class ProductForm(forms.ModelForm):
+    pro_name = forms.CharField(label="Product Name")
+    pro_price = forms.IntegerField(label="Product Price")
+    exp_duration = forms.IntegerField(label="Expiry Duration")
 
     class Meta:
         model = Product
@@ -16,9 +19,10 @@ class ProductForm(forms.ModelForm):
 
 
 class BatchForm(forms.ModelForm):
-    release_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS, widget=forms.TextInput(
-        attrs={'type': 'date'}
-    ))
+    release_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS,
+                                    widget=forms.TextInput(attrs={'type': 'date'}
+                                    ))
+    no_of_products = forms.IntegerField(label="Number of Items")
 
     class Meta:
         model = Batch

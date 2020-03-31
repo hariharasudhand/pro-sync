@@ -20,7 +20,7 @@
         <li><a href="{% url 'batch' %}"><i class="fa fa-rocket"></i>Create Batch <span class="fa fa-chevron-down"></span></a></li>
         {% endif %}
         {% if roles.has_batch_perm %}
-        <li><a href="view_batch.html"><i class="fa fa-table"></i> View Batch <span class="fa fa-chevron-down"></span></a></li>
+        <li><a href="{% url 'batch' %}"><i class="fa fa-table"></i> View Batch <span class="fa fa-chevron-down"></span></a></li>
         {% endif %}
         {% if roles.has_support_perm %}
         <li><a a href="support.html"><i class="fa fa-life-saver"></i> Support <span class="fa fa-chevron-down"></span></a></li>

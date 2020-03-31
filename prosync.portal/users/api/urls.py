@@ -1,5 +1,4 @@
-from users.api.views import api_detail_consumer_view, api_consumer_register_view, api_product_check_view, ConsumerView
-
+from users.api import views
 from django.urls import path
 
 app_name = 'users'
@@ -7,8 +6,11 @@ app_name = 'users'
 urlpatterns = [
 
     # consumer links
-    path('con/', ConsumerView.as_view()),
-    path('<int:id>/', api_detail_consumer_view),
-    path('con_register/', api_consumer_register_view, name='con_register'),
-    path('pro_check/', api_product_check_view, name='product_check'),
+    path('con/', views.ConsumerView.as_view()),
+    path('<int:id>/', views.api_detail_consumer_view),
+    path('con_register/', views.api_consumer_register_view, name='con_register'),
+    path('pro_check/', views.api_product_check_view, name='product_check'),
+
+    # retailer links
+    path('ret_login/', views.api_retailer_login_view, name='retailer_login'),
 ]

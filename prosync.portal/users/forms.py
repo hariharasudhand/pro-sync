@@ -89,7 +89,7 @@ class RolePermissionForm(forms.ModelForm):
                 Column('delete', css_class='form-group col-md-3 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Save', css_class='btn btn-success  col-md-offset-5')
+            Submit('submit', 'Save', css_class='btn btn-success col-md-offset-5')
         )
 
 
@@ -113,6 +113,5 @@ class GroupsForm(forms.ModelForm):
                 Column('role_permission', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
-            Submit('submit', 'Save', css_class='btn btn-success  col-md-offset-5')
-
+            Submit('submit', 'Save', css_class='btn btn-success col-md-offset-5')
         )

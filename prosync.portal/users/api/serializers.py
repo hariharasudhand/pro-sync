@@ -1,17 +1,12 @@
 from ..models import Consumer
 from product.models import Product
 from rest_framework import serializers
-
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-from rest_framework import status
-
+from django.contrib.auth.models import User
 
 class ConsumerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Consumer
-        # fields = ['con_name', 'status', 'email', 'phone']
         fields = '__all__'
 
 
@@ -26,5 +21,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Consumer
-        # fields = ['pro_name', 'pro_price', 'exp_duration']
+        fields = []
+
+
+class RetailerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
         fields = []
