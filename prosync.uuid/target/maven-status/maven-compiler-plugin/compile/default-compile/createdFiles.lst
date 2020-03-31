@@ -1,0 +1,9 @@
+com/weeroda/idgen/services/UUIDService.class
+com/weeroda/idgen/UUIDApplication.class
+com/weeroda/idgen/configurations/SwaggerConfig.class
+com/weeroda/idgen/dto/UUIDCreateDTO.class
+com/weeroda/idgen/dto/UUIDUpdateDTO.class
+com/weeroda/idgen/repositories/UUIDRepository.class
+com/weeroda/idgen/controllers/UUIDController.class
+com/weeroda/idgen/services/UUIDServiceImpl.class
+com/weeroda/idgen/documents/UUID.class

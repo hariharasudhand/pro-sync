@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  api-database:
+    image: mongo:3.2.4
+    networks:
+      - uuid-network
+    container_name: "api-database"
+    restart: always
+    ports:
+      - 27017:27017
+    command: --smallfiles
+    hostname: api-database
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 9091:8080
+    networks:
+      - uuid-network
+    links:
+      - api-database
+networks:
+  uuid-network:
+    driver: bridge
