@@ -6,10 +6,10 @@ from django.db.models.signals import post_save
 from multiselectfield import MultiSelectField
 from PIL import Image
 
-MODULES = ( ('Admin', 'Admin'), ('Product', 'Product'), ('Billing', 'Billing'),
-            ('Batch', 'Batch'), ('Support', 'Support'), ('Offer', 'Offer') )
-ORG_TYPE = ( ('Manufacturer', 'Manufacturer'), ('SuperStockist', 'Super Stockist'),
-             ('Stockist', 'Stockist'), ('Retailer', 'Retailer') )
+MODULES = (('Admin', 'Admin'), ('Product', 'Product'), ('Billing', 'Billing'),
+           ('Batch', 'Batch'), ('Support', 'Support'), ('Offer', 'Offer'))
+ORG_TYPE = (('Manufacturer', 'Manufacturer'), ('SuperStockist', 'Super Stockist'),
+            ('Stockist', 'Stockist'), ('Retailer', 'Retailer'))
 
 
 class Organization(models.Model):
@@ -71,10 +71,11 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         img = Image.open(self.photo.path)
-        if img.height >125 or img.width >125:
+        if img.height > 125 or img.width > 125:
             output_size = (125, 125)
             img.thumbnail(output_size)
             img.save(self.photo.path)
+
 
 # Consumer Entity
 class Consumer(models.Model):
@@ -100,6 +101,7 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
     instance.profile.save()
+
 
 @receiver(post_save, sender=Organization)
 def create_roles(sender, instance, created, **kwargs):

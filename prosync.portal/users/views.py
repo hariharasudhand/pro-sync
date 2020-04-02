@@ -202,7 +202,7 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, f'Your profile is updated')
+            messages.success(request, 'Your profile is updated')
             return redirect('profile')
     else:
         p_form = ProfileUpdateForm(instance=request.user.profile)
@@ -233,8 +233,8 @@ def roles_update(request, id):
 
 
 def roles_helper(request, id):
-    orgId = request.user.profile.org.id
-    model = RolePermission.objects.filter(status='ACTIVE').filter(org=orgId)
+    org_id = request.user.profile.org.id
+    model = RolePermission.objects.filter(status='ACTIVE').filter(org=org_id)
     if id > 0:
         obj = RolePermission.objects.get(id=id)
         form = RolePermissionForm(request.POST or None, instance=obj)
@@ -280,8 +280,8 @@ def groups_cancel(request, id):
 
 
 def groups_helper(request, id):
-    orgId = request.user.profile.org.id
-    model = Groups.objects.filter(status='ACTIVE').filter(org=orgId)
+    org_id = request.user.profile.org.id
+    model = Groups.objects.filter(status='ACTIVE').filter(org=org_id)
     if id > 0:
         obj = Groups.objects.get(id=id)
         form = GroupsForm(orgId, request.POST or None, instance=obj)

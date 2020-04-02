@@ -1,11 +1,12 @@
-from ..models import Consumer
-from product.models import Product
-from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from rest_framework import serializers
+
+from .models import Consumer
+from product.models import Product
+
 
 class ConsumerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Consumer
         fields = '__all__'
@@ -18,7 +19,7 @@ class ConsumerRegistrationSerializer(serializers.ModelSerializer):
         model = Consumer
         fields = ['con_name', 'email', 'phone', 'username', 'password', 'password2']
 
-    def save(self, **kwargs):
+    def save(self):
         consumer = Consumer(
             con_name=self.validated_data['con_name'],
             email=self.validated_data['email'],
@@ -37,14 +38,12 @@ class ConsumerRegistrationSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Consumer
         fields = []
 
 
 class RetailerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = []
@@ -57,8 +56,7 @@ class AgentRegistrationSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email', 'username', 'password', 'password2']
 
-    def save(self, **kwargs):
-
+    def save(self):
         user = User(
             email=self.validated_data['email'],
             username=self.validated_data['username'],

@@ -85,7 +85,6 @@ def api_retailer_login_view(request):
                     return Response({'token': tok.key}, status=status.HTTP_201_CREATED)
             else:
                 try:
-                    user_ = User.objects.get(username=username)
                     return Response({'response': "Password Mismatch"}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 except User.DoesNotExist:
                     return Response({'response': "Retailer Not Found"}, status=status.HTTP_404_NOT_FOUND)

@@ -3,6 +3,7 @@ from django.template import loader
 from django.http import HttpResponse
 from users.views import get_roles
 
+
 def index(request):
     context = {}
     logout(request)
