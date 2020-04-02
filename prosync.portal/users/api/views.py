@@ -1,17 +1,15 @@
-from users.models import Consumer
-from . import serializers
-from users.api.models import MyOwnToken
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-
 from rest_framework.authtoken.models import Token
-# from rest_framework.authentication import TokenAuthentication
-# from rest_framework.authtoken.views import ObtainAuthToken
-# from rest_framework.permissions import IsAuthenticated
+
+from users.models import Consumer
+from . import serializers
+from users.api.models import MyOwnToken
+from users.models import Consumer, Profile
 
 
 class ConsumerView(generics.ListAPIView):
@@ -36,14 +34,12 @@ def api_detail_consumer_view(request, id):
 @api_view(['POST', ])
 def api_consumer_register_view(request):
     if request.method == "POST":
-        serializer = serializers.RegistrationSerializer(data=request.data)
-        data = {}
+        serializer = serializers.ConsumerRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             consumer = serializer.save()
+
             token = MyOwnToken.objects.create(consumer=consumer)
-            data['response'] = "successfully registered"
-            data['token'] = token.key
-            return Response(data, status=status.HTTP_201_CREATED)
+            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -93,4 +89,24 @@ def api_retailer_login_view(request):
                     return Response({'response': "Password Mismatch"}, status=status.HTTP_406_NOT_ACCEPTABLE)
                 except User.DoesNotExist:
                     return Response({'response': "Retailer Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST', ])
+def api_agent_register_view(request):
+    if request.method == 'POST':
+        serializer = serializers.AgentRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            phone = serializer.initial_data.get('phone')
+
+            token = Token.objects.create(user=user)
+
+            profile = Profile.objects.get(user_id=user.id)
+            profile.phone = phone
+            profile.user_token = token.key
+            profile.status = 'ACTIVE'
+            profile.force_login = True
+            profile.save()
+            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
