@@ -1,0 +1,9 @@
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/dto/UUIDCreateDTO.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/dto/UUIDUpdateDTO.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/repositories/UUIDRepository.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/services/UUIDService.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/UUIDApplication.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/documents/UUID.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/services/UUIDServiceImpl.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/configurations/SwaggerConfig.java
+/Users/harid/work/pro-sync/prosync.uuid/src/main/java/com/weeroda/idgen/controllers/UUIDController.java
