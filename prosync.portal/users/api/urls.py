@@ -16,6 +16,6 @@ urlpatterns = [
 
     # agent links
     path('agent_register/', views.api_agent_register_view, name='agent_register'),
-
+    path('agent_update/', views.api_agent_update_view, name='agent_update'),
 ]
 

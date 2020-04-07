@@ -1,15 +1,17 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 
 from rest_framework import generics, status
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
-from users.models import Consumer
+from users.models import Consumer, Profile
 from . import serializers
 from users.api.models import MyOwnToken
-from users.models import Consumer, Profile
 
 
 class ConsumerView(generics.ListAPIView):
@@ -108,4 +110,69 @@ def api_agent_register_view(request):
             profile.force_login = True
             profile.save()
             return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', ])
+@permission_classes([IsAuthenticated])
+def api_agent_update_view(request):
+    if request.method == 'PUT':
+        serializer = serializers.AgentUpdateSerializer(instance=request.user, data=request.data)
+        if serializer.is_valid():
+            username = serializer.initial_data.get('username')
+            try:
+                user = User.objects.get(username=username)
+                token = Token.objects.get(user=user)
+            except User.DoesNotExist:
+                return Response({'User': 'Agent Not Found'}, status.HTTP_404_NOT_FOUND)
+            if request.user == user:
+                serializer.save()
+            else:
+                return Response({'response': 'Agent Not Acceptable'}, status.HTTP_406_NOT_ACCEPTABLE)
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AgentChangePasswordView(UpdateAPIView):
+    serializer_class = serializers.AgentChangePasswordSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        if hasattr(user, 'auth_token'):
+            user.auth_token.delete()
+        token, created = Token.objects.get_or_create(user=user)
+        profile = Profile.objects.get(user_id=user.id)
+        profile.user_token = token.key
+        profile.save()
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST', ])
+def api_consumer_login_view(request):
+    if request.method == "POST":
+        serializer = serializers.ConsumerLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            token = serializer.initial_data.get('token')
+            username = serializer.initial_data.get('username')
+            password = serializer.initial_data.get('password')
+            try:
+                consumer = Consumer.objects.get(username=username)
+                if check_password(password=password, encoded=consumer.password):
+                    try:
+                        tok = MyOwnToken.objects.get(consumer=consumer)
+                        if tok.key == token or token == '':
+                            return Response({'token': tok.key}, status=status.HTTP_200_OK)
+                        else:
+                            return Response({'response': "Invalid Token"}, status=status.HTTP_401_UNAUTHORIZED)
+                    except MyOwnToken.DoesNotExist:
+                        tok = MyOwnToken.objects.create(consumer=consumer)
+                        return Response({'token': tok.key}, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({'response': "Password Mismatch"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            except Consumer.DoesNotExist:
+                return Response({'response': "Consumer Not Found"}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

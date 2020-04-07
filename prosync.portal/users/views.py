@@ -284,10 +284,10 @@ def groups_helper(request, id):
     model = Groups.objects.filter(status='ACTIVE').filter(org=org_id)
     if id > 0:
         obj = Groups.objects.get(id=id)
-        form = GroupsForm(orgId, request.POST or None, instance=obj)
+        form = GroupsForm(org_id, request.POST or None, instance=obj)
         is_update = True
     else:
-        form = GroupsForm(orgId, request.POST or None)
+        form = GroupsForm(org_id, request.POST or None)
         is_update = False
         obj = None
 
@@ -302,7 +302,7 @@ def helper(request, model, form, str_redirect, str_render, str_msg, is_update, o
     if form.is_valid():
         form.save()
         messages.success(request, f'{str_msg} data is updated')
-
+        return redirect(str_redirect)
     context = {
         'form': form,
         'model': model,
