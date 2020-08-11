@@ -41,7 +41,16 @@ def api_consumer_register_view(request):
             consumer = serializer.save()
 
             token = MyOwnToken.objects.create(consumer=consumer)
-            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+            data = {
+                'response': "Consumer Saved Successfully",
+                'token': token.key,
+                'name': consumer.con_name,
+                'uname':consumer.username,
+                'email':consumer.email,
+                'phone':consumer.phone,
+                'status':consumer.status,
+            }
+            return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
