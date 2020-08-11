@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-import asgi_redis
+#import asgi_redis
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -59,13 +59,13 @@ REST_FRAMEWORK = {
 }
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgi_redis.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        },
+   # "default": {
+    #    "BACKEND": "asgi_redis.RedisChannelLayer",
+    #    "CONFIG": {
+     #       "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+     #   },
         # "ROUTING": "app.routing.channel_routing",
-    },
+   # },
 }
 
 MIDDLEWARE = [
@@ -103,18 +103,18 @@ WSGI_APPLICATION = 'gentelella.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-     }
-    #'default': {
-    #    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #    'NAME': 'pro-sync',
-    #    'USER': 'postgres',
-    #    'PASSWORD': '',
-    #    'HOST': 'localhost',
-    #    'PORT': '',
-    #}
+     #'default': {
+     #    'ENGINE': 'django.db.backends.sqlite3',
+     #    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+     #}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pro-sync',
+        'USER': 'postgres',
+        'PASSWORD': 'mysecretpassword',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
 }
 
 
