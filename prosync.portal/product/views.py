@@ -145,7 +145,7 @@ def batch_helper(request, id, model, p_model, form, str_redirect, str_render, or
         bat.save()
 
         # Generate UUID in Spring Boot Rest API
-        url = os.environ.get("URL", 'http://localhost:3307/api/hashkey/add')
+        url = os.environ.get("URL", 'http://140.238.230.166:9091/api/uuids/g')
         url = "%s" % url
         body = {"exp_duration": "%s" % prod.exp_duration, "org_id": "%s" % org_id,
                 "prod_id": "%s" % prod_id, "item_count": "%s" % no_of_items,
@@ -159,7 +159,7 @@ def batch_helper(request, id, model, p_model, form, str_redirect, str_render, or
             dic_keys.sort()
 
             # # Add UUID in Blockchain
-            url = os.environ.get("URL", 'http://127.0.0.1:4010/records')
+            url = os.environ.get("URL", 'http://152.67.163.110:8000/records')
             url = "%s" % url
             for item_id in dic_keys:
                 body = {"latitude": 44982734, "longitude": -93272107, "record_id": dic[item_id]}
@@ -167,7 +167,7 @@ def batch_helper(request, id, model, p_model, form, str_redirect, str_render, or
                                             'Authorization': 'eyJpYXQiOjE1MTA4NjM5NzksImV4cCI6MTUxMDg2NzU3OSwiYWxnIjoiSFMyNTYifQ.eyJpZCI6IjAyYTA2ZjM0NGM2MDc0ZTRiZDBjYThhMmFiZTQ1ZWU2ZWM5MmJmOWNkZDdiN2E2N2M4MDQzNTBiZmZmNGQ0YThjMCJ9.mM_uwZ1wrdag5PoCNThn_0gzZpsIhC_xSsa8xIFxggs'}, json=body)
 
             # Save UUID in Spring Boot Rest API DataBase
-            url = os.environ.get("URL", 'http://localhost:3307/api/hashkey/save')
+            url = os.environ.get("URL", 'http://140.238.230.166:9091/api/uuids/c')
             url = "%s" % url
             body = {"exp_duration": "%s" % prod.exp_duration, "org_id": "%s" % org_id,
                     "prod_id": "%s" % prod_id,
