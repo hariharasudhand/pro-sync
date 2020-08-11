@@ -31,7 +31,7 @@ public class UUIDServiceImpl implements UUIDService {
     }
 
     @Override
-    public  List<UUID> createUUID(UUIDCreateDTO uuidCreate) {
+    public  List<UUID> generateUUID(UUIDCreateDTO uuidCreate) {
 
         List<UUID> uuidList = new ArrayList<UUID>();
         int ids = uuidCreate.getTotal_ids();
@@ -39,8 +39,17 @@ public class UUIDServiceImpl implements UUIDService {
 
             uuidList.add(new UUID(uuidCreate.getExp_duration(), uuidCreate.getProd_id(), uuidCreate.getOrg_id(), uuidCreate.getAdded_date(), i));
         }
+        return uuidList;
+    }
 
-        return UUIDRepository.saveAll(uuidList);
+     @Override
+    public  boolean createUUID(List<UUID> uuidList) {
+
+        if (uuidList == null || uuidList.isEmpty()){
+                throw new MongoException("UUID List is Empty, no action taken");
+        }
+        UUIDRepository.saveAll(uuidList);
+        return true;
     }
 
     @Override
