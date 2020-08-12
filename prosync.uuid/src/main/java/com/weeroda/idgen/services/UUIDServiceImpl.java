@@ -43,13 +43,13 @@ public class UUIDServiceImpl implements UUIDService {
     }
 
      @Override
-    public  boolean createUUID(List<UUID> uuidList) {
+    public  List<UUID> createUUID(List<UUID> uuidList) {
 
         if (uuidList == null || uuidList.isEmpty()){
                 throw new MongoException("UUID List is Empty, no action taken");
         }
         UUIDRepository.saveAll(uuidList);
-        return true;
+        return uuidList;
     }
 
     @Override

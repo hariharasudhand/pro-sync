@@ -49,7 +49,7 @@ public class UUIDController {
        Generate  UUID for organization & product combination  
        TODO : break this function into two 1.generate & 2.save like Kavinesh
     */
-    @PostMapping(value = "/uuids/g")
+    @PostMapping(value = "/uuids/gen/")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<UUID>> generateUUID(@RequestBody UUIDCreateDTO UUIDCreateDTO){
         return new ResponseEntity<>(UUIDService.generateUUID(UUIDCreateDTO), HttpStatus.CREATED);
@@ -59,9 +59,9 @@ public class UUIDController {
        Save  UUID for organization & product combination  
        TODO : break this function into two 1.generate & 2.save like Kavinesh
     */
-    @PostMapping(value = "/uuids/c")
+    @PostMapping(value = "/uuids/cre/")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Boolean> createUUID(@RequestBody List<UUID> uuidList){
+    public ResponseEntity<List<UUID>> createUUID(@RequestBody List<UUID> uuidList){
         return new ResponseEntity<>(UUIDService.createUUID(uuidList), HttpStatus.CREATED);
     }
 
