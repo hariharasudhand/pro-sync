@@ -47,8 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
     'product',
     'rest_framework',
-    'rest_framework.authtoken',
-    'channels',
+    'rest_framework.authtoken'
 ]
 
 REST_FRAMEWORK = {
